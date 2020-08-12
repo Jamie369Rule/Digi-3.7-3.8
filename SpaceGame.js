@@ -8,27 +8,51 @@ ctx.fillStyle = "Black";
 ctx.fill();
 
 //variables and constants
-const ballX = 75
-const ballRadius = 15
+const shipX = 75
+const shipRadius = 15
+const shipSpeed = 5
+var shipDown = true
 
 
 // this ball is my practice spaceship
-// create ball
-const ball = {
-	x : ballX,
+// create spaceship
+const ship = {
+	x : shipX,
 	y : cvs.height/2,
-	radius : ballRadius,
+	radius : shipRadius,
+  speed : shipSpeed
 }
 
 // draw ball
-function drawBall(){
+function drawShip(){
   ctx.beginPath();
 
-  ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2);
+  ctx.arc(ship.x, ship.y, ship.radius, 0, Math.PI*2);
   ctx.fillStyle = "White";
   ctx.fill();
 
   ctx.closePath();
+}
+
+// spaceship falling
+
+
+// control spaceship
+document.addEventListener("keydown", function (event){
+  if(event.code == 32){
+    if(shipDown = true){
+      shipDown = false;
+    }else if(ballDown = false){
+      shipdown = true;
+    }
+  }
+});
+
+function draw(){
+    drawShip();
+}
+
+function update() {
 }
 
 //game loop
@@ -38,7 +62,8 @@ function loop(){
   ctx.fillStyle = "Black";
   ctx.fill();
 
-  drawBall();
+  draw();
+  update();
 
 		requestAnimationFrame(loop);
 	}
