@@ -11,7 +11,8 @@ ctx.fill();
 const shipX = 75
 const shipRadius = 15
 var shipSpeed = 5
-var shipDown = true
+var upArrow = false
+var downArrow = false
 
 
 // this ball is my practice spaceship
@@ -35,48 +36,35 @@ function drawShip(){
 
 // control spaceship
 document.addEventListener("keydown", function(event){
-  if(event.keyCode == 32){
-    if(shipDown = true){
-      shipDown = false; console.log("space")
-    }else if(ballDown = false){
-      shipDown = true;
-    }
-  }
+	if(event.keyCode == 38){
+		upArrow = true;
+	}else if(event.keyCode == 40){
+	downArrow = true;
+	}
+});
+document.addEventListener("keyup", function(event){
+	if(event.keyCode == 38){
+		upArrow = false;
+	}else if(event.keyCode == 40){
+		downArrow = false;
+	}
 });
 
-
-// spaceship moving
-function shipMoveDown() {
-  if(shipDown = true){
+// move the spaceship
+function moveShip(){
+  if(upArrow && ship.y - shipRadius > 0){
+    ship.y -= shipSpeed;
+  }else if(downArrow && ship.y + shipRadius < cvs.height){
     ship.y += shipSpeed;
   }
 }
-
-function shipMoveUp(){
-  if(shipDown = false){
-    ship.y -= shipSpeed;
-  }
-}
-
-// wallCollision
-function wallCollision() {
-  if(ship.y < 0){
-    shipDown = true;
-  }
-  if(ship.y > cvs.height - shipRadius){
-    shipDown = false; console.log("bottom")
-  }
-}
-
 
 function draw(){
     drawShip();
 }
 
 function update() {
-  wallCollision();
-  shipMoveDown();
-  shipMoveUp();
+  moveShip();
 }
 
 //game loop
