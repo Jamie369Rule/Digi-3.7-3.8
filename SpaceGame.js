@@ -13,6 +13,8 @@ const shipRadius = 15
 var shipSpeed = 5
 var upArrow = false
 var downArrow = false
+var obsRadius = 30
+var obsSpeed = 5
 
 
 // this ball is my practice spaceship
@@ -59,12 +61,38 @@ function moveShip(){
   }
 }
 
+//create obstacle
+const obs = {
+  x : cvs.width,
+  y : cvs.height/2,
+  radius : obsRadius,
+  speed : obsSpeed
+}
+
+// draw obstacle
+function drawObs(){
+  ctx.beginPath();
+
+  ctx.arc(obs.x, obs.y, obs.radius, 0, Math.PI*2);
+  ctx.fillStyle = "White";
+  ctx.fill();
+
+  ctx.closePath();
+}
+
+// move obstacle
+function moveObs() {
+obs.x -= obsSpeed;
+}
+
 function draw(){
     drawShip();
+    drawObs();
 }
 
 function update() {
   moveShip();
+  moveObs();
 }
 
 //game loop
