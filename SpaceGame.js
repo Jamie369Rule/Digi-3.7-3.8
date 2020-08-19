@@ -15,6 +15,9 @@ var upArrow = false
 var downArrow = false
 var obsRadius = 30
 var obsSpeed = 5
+var obsMinY = 0 + obsRadius;
+var obsMaxY = cvs.height - obsRadius;
+
 
 
 // this ball is my practice spaceship
@@ -64,7 +67,7 @@ function moveShip(){
 //create obstacle
 const obs = {
   x : cvs.width,
-  y : cvs.height/2,
+  y : obsY(obsMinY, obsMaxY),
   radius : obsRadius,
   speed : obsSpeed
 }
@@ -80,9 +83,19 @@ function drawObs(){
   ctx.closePath();
 }
 
+// change the Y value for the obstacle when it spawns again
+function obsY(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
 // move obstacle
 function moveObs() {
-obs.x -= obsSpeed;
+  if(obs.x + obsRadius > 0){
+  obs.x -= obsSpeed;
+}else{
+  obs.y = obsY(obsMinY, obsMaxY);
+  obs.x = cvs.width + obsRadius
+  }
 }
 
 function draw(){
