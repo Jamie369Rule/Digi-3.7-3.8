@@ -9,16 +9,31 @@ ctx.fill();
 
 //variables and constants
 const shipX = 75
-const shipRadius = 20
-var shipSpeed = 5
+const shipRadius = 15
+var shipSpeed = 4
 var upArrow = false
 var downArrow = false
-var obsRadius = 50
+//var obsRadius = Math.random () * (40 - 20) + 20;
 var obsSpeed = 3
-var obsMinY = 0 + obsRadius;
-var obsMaxY = cvs.height - obsRadius;
+var obs1MinY = 0 + obsRadius;
+var obs1MaxY = 100 - obsRadius;
+var obs2MinY = 100 + obsRadius;
+var obs2MaxY = 200 - obsRadius;
+var obs3MinY = 200 + obsRadius;
+var obs3MaxY = 300 - obsRadius;
 var obsMinX = cvs.width + shipRadius;
 var obsMaxX = cvs.width + 500;
+
+// var small = 20
+// var medium = 30
+// var large = 40
+var obsRadius = [20, 30, 40];
+var randomRadius = obsRadius[Math.floor(Math.random()*obsRadius.length)];
+console.log("randomRadius")
+
+//var randomRadius = obsRadius[Math.round(Math.random * obsRadius.length)];
+
+
 
 // this ball is my practice spaceship
 // create spaceship
@@ -67,22 +82,22 @@ function moveShip(){
 //create obstacle
   const obs1 = {
     x : obsX(obsMinX, obsMaxX),
-    y : obsY(obsMinY, obsMaxY),
-    radius : obsRadius,
+    y : obsY(obs1MinY, obs1MaxY),
+    radius : randomRadius,
     speed : obsSpeed
   }
 
   const obs2 = {
     x : obsX(obsMinX, obsMaxX),
-    y : obsY(obsMinY, obsMaxY),
-    radius : obsRadius,
+    y : obsY(obs2MinY, obs2MaxY),
+    radius : randomRadius,
     speed : obsSpeed
   }
 
   const obs3 = {
     x : obsX(obsMinX, obsMaxX),
-    y : obsY(obsMinY, obsMaxY),
-    radius : obsRadius,
+    y : obsY(obs3MinY, obs3MaxY),
+    radius : randomRadius,
     speed : obsSpeed
   }
 
@@ -127,13 +142,17 @@ function obsX(min, max) {
   return Math.random() * (max - min) + min;
 }
 
+//change the raidus of the obs when it spawns again
+
+
 // move obstacle
 function moveObs1() {
   if(obs1.x + obsRadius > 0){
   obs1.x -= obsSpeed;
 }else{
-  obs1.y = obsY(obsMinY, obsMaxY);
+  obs1.y = obsY(obs1MinY, obs1MaxY);
   obs1.x = obsX(obsMinX, obsMaxX);
+  obs1.radius = randomRadius;
   }
 }
 
@@ -141,8 +160,9 @@ function moveObs2() {
   if(obs2.x + obsRadius > 0){
   obs2.x -= obsSpeed;
 }else{
-  obs2.y = obsY(obsMinY, obsMaxY);
+  obs2.y = obsY(obs2MinY, obs2MaxY);
   obs2.x = obsX(obsMinX, obsMaxX);
+  obs2.radius = randomRadius;
   }
 }
 
@@ -150,8 +170,9 @@ function moveObs3() {
   if(obs3.x + obsRadius > 0){
   obs3.x -= obsSpeed;
 }else{
-  obs3.y = obsY(obsMinY, obsMaxY);
+  obs3.y = obsY(obs2MinY, obs2MaxY);
   obs3.x = obsX(obsMinX, obsMaxX);
+  obs3.radius = randomRadius;
   }
 }
 
