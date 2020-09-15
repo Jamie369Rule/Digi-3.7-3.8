@@ -11,14 +11,14 @@ ctx.fill();
 var upArrow = false
 var downArrow = false
 
-// Obstacle varibales
 var obsRadius = 30
 var obstacles = [];
 var startPos = true
 var totalObs = 6
-var obsMinSpeed = 5
-var obsMaxSpeed = 8
+var obsMinSpeed = 3
+var obsMaxSpeed = 5
 
+var obsHit = false
 
 
 // this ball is my practice spaceship
@@ -26,7 +26,7 @@ var obsMaxSpeed = 8
 const ship = {
 	x : 100,
 	y : cvs.height/2,
-	speed : 4,
+	speed : 8,
 	radius : 15,
 }
 
@@ -71,7 +71,7 @@ function makeObs() {
   var obs = {
     x : cvs.width + obsRadius,
     y :  Math.floor(Math.random() * ((cvs.height + obsRadius) - obsRadius)),
-    speed : Math.floor(Math.random() * (obsMaxSpeed - obsMinSpeed) + obsMinSpeed),
+    speed : (Math.random() * (obsMaxSpeed - obsMinSpeed) + obsMinSpeed),
 		radius : obsRadius
   }
     obstacles.push(obs);
@@ -88,7 +88,7 @@ function drawObs(){
   });
 }
 
-
+// Obstacle movement
 function moveObs() {
   obstacles.forEach(function(obs){
 
@@ -97,14 +97,32 @@ function moveObs() {
     if(obs.x < 0 - obs.radius) {
       obs.y =  Math.floor(Math.random() * ((cvs.height + obs.radius) - obs.radius));
       obs.x = cvs.width + obs.radius;
-      obs.speed = Math.floor(Math.random() * (obsMaxSpeed - obsMinSpeed) + obsMinSpeed)
+      obs.speed = (Math.random() * (obsMaxSpeed - obsMinSpeed) + obsMinSpeed)
     }
-		if(obs.y + obs.radius > ship.y && obs.y < ship.y + ship.radius && obs.x +
-			obs.radius > ship.x && obs.x < ship.x + ship.radius){
+		// Collision detection
+		if(ship.x + ship.radius > obs.x - obs.radius && ship.x - ship.radius < obs.x + obs.radius && ship.y + ship.radius > obs.y - obs.radius && ship.y - ship.radius < obs.y + obs.radius){
 			console.log('hit');
+			obsHit = true;
 		}
   });
 }
+
+function gameOver(){
+	if(obsHit){
+	ctx.beginPath();
+	ctx.rect(0, 0, cvs.width, cvs.height);
+	ctx.fillStyle = "Black";
+	ctx.fill();
+
+	ctx.font = "30px Arial";
+	ctx.fillStyle = "white";
+	ctx.textAlign = "center";
+	ctx.fillText("GAMEOVER", cvs.width/2, cvs.height/2);
+ }
+}
+
+
+
 
 //game loop
 function loop(){
@@ -126,6 +144,7 @@ function loop(){
   moveShip();
   moveObs();
 
+	gameOver();
 
   requestAnimationFrame(loop);
 	}
