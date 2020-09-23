@@ -10,15 +10,16 @@ ctx.fill();
 
 var upArrow = false
 var downArrow = false
-
 var obsRadius = 30
 var obstacles = [];
 var startPos = true
-var totalObs = 6
+var totalObs = 8
 var obsMinSpeed = 3
 var obsMaxSpeed = 5
+var gameOver = false
+var score = 0
 
-var obsHit = false
+
 
 
 // this ball is my practice spaceship
@@ -102,13 +103,29 @@ function moveObs() {
 		// Collision detection
 		if(ship.x + ship.radius > obs.x - obs.radius && ship.x - ship.radius < obs.x + obs.radius && ship.y + ship.radius > obs.y - obs.radius && ship.y - ship.radius < obs.y + obs.radius){
 			console.log('hit');
-			obsHit = true;
+			gameOver = true;
 		}
   });
 }
 
-function gameOver(){
-	if(obsHit){
+// SCORE
+function drawScore(){
+	ctx.font = "16px Arial";
+ 	ctx.fillStyle = "white";
+ 	ctx.fillText("Score: "+score, 30, 20);
+}
+
+function addScore() {
+	if(! gameOver){
+		score = score + 1;
+	}
+}
+
+
+
+
+function endGame(){
+	if(gameOver){
 	ctx.beginPath();
 	ctx.rect(0, 0, cvs.width, cvs.height);
 	ctx.fillStyle = "Black";
@@ -117,12 +134,28 @@ function gameOver(){
 	ctx.font = "30px Arial";
 	ctx.fillStyle = "white";
 	ctx.textAlign = "center";
-	ctx.fillText("GAMEOVER", cvs.width/2, cvs.height/2);
+	ctx.fillText("GAMEOVER", cvs.width/2, cvs.height/3);
+	ctx.font = "20px Arial";
+	ctx.fillText("Score: "+score, cvs.width/2, cvs.height/2);
+	ctx.font = "20px Arial";
+	ctx.fillText("Press Space To Try Again", cvs.width/2, cvs.height - cvs.height/3);
+
+	obstacles.splice(0,obstacles.length)
  }
 }
 
 
-
+function gameReset() {
+	document.addEventListener('keydown', function(event){
+		if(gameOver && event.keyCode == 32){
+			console.log('reset')
+			gameOver = false
+			score = 0
+			startPos = true
+			ship.y = cvs.height/2
+		}
+	})
+}
 
 //game loop
 function loop(){
@@ -144,7 +177,10 @@ function loop(){
   moveShip();
   moveObs();
 
-	gameOver();
+	drawScore();
+	addScore();
+	endGame();
+	gameReset();
 
   requestAnimationFrame(loop);
 	}
