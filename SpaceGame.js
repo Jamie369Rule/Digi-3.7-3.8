@@ -7,19 +7,20 @@ ctx.rect(0, 0, cvs.width, cvs.height);
 ctx.fillStyle = "Black";
 ctx.fill();
 
-
-var upArrow = false
-var downArrow = false
-var obsRadius = 30
+//variables
+var upArrow = false;
+var downArrow = false;
+var obsRadius = 30;
 var obstacles = [];
-var startPos = true
-var totalObs = 8
-var obsMinSpeed = 3
-var obsMaxSpeed = 5
-var gameOver = false
-var score = 0
-
-
+var createObs = true;
+var totalObs = 8;
+var obsMinSpeed = 3;
+var obsMaxSpeed = 5;
+var gameOver = false;
+var score = 0;
+var highScores = [];
+var leaderboardXPos = cvs.width/2
+var leaderboardYPos = 150
 
 
 // this ball is my practice spaceship
@@ -104,6 +105,7 @@ function moveObs() {
 		if(ship.x + ship.radius > obs.x - obs.radius && ship.x - ship.radius < obs.x + obs.radius && ship.y + ship.radius > obs.y - obs.radius && ship.y - ship.radius < obs.y + obs.radius){
 			console.log('hit');
 			gameOver = true;
+			checkScore();
 		}
   });
 }
@@ -122,23 +124,55 @@ function addScore() {
 }
 
 
+// leaderboard
+function checkScore(){
+		console.log('checkscore');
+	highScores.push(score);
+	highScores.sort(function(a, b){return b - a});
+
+	if (highScores.length > 5){
+			highScores.pop()
+			console.log(highScores);
+	}
+}
 
 
+
+
+// End game screen
 function endGame(){
 	if(gameOver){
+
+// draw the end screen
 	ctx.beginPath();
 	ctx.rect(0, 0, cvs.width, cvs.height);
 	ctx.fillStyle = "Black";
 	ctx.fill();
 
-	ctx.font = "30px Arial";
+//write the words
+	ctx.font = "35px Arial";
 	ctx.fillStyle = "white";
 	ctx.textAlign = "center";
-	ctx.fillText("GAMEOVER", cvs.width/2, cvs.height/3);
+	ctx.fillText("GAMEOVER", cvs.width/2, 50);
+
+	// ctx.font = "20px Arial";
+	// ctx.fillText("Score: "+score, cvs.width/2, 300);
+
 	ctx.font = "20px Arial";
-	ctx.fillText("Score: "+score, cvs.width/2, cvs.height/2);
-	ctx.font = "20px Arial";
-	ctx.fillText("Press Space To Try Again", cvs.width/2, cvs.height - cvs.height/3);
+	ctx.fillText("Press Space To Try Again", cvs.width/2, 450);
+
+	// draw leaderboard
+	ctx.font = "30px Arial";
+	ctx.fillStyle = "white";
+	ctx.fillText("Leaderboard", leaderboardXPos, leaderboardYPos);
+
+	for ( var i = 0; i < highScores.length; i++) {
+		ctx.font = "20px Arial";
+		ctx.fillstyle = "white";
+		ctx.fillText((i + 1) + ": " + highScores[i], leaderboardXPos - 10, leaderboardYPos + 30);
+		leaderboardYPos += 35;
+	}
+leaderboardYPos = 150;
 
 	obstacles.splice(0,obstacles.length)
  }
@@ -149,13 +183,15 @@ function gameReset() {
 	document.addEventListener('keydown', function(event){
 		if(gameOver && event.keyCode == 32){
 			console.log('reset')
-			gameOver = false
-			score = 0
-			startPos = true
-			ship.y = cvs.height/2
+			gameOver = false;
+			score = 0;
+			createObs = true;
+			ship.y = cvs.height/2;
+
 		}
 	})
 }
+
 
 //game loop
 function loop(){
@@ -165,11 +201,11 @@ function loop(){
   ctx.fill();
 
 
-  if(startPos){
+  if(createObs){
     for( var i = 0; i < totalObs; i++){
       makeObs();
     }
-  startPos = false;
+  createObs = false;
   }
 
   drawObs();
