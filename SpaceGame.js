@@ -17,6 +17,7 @@ var totalObs = 8;
 var obsMinSpeed = 3;
 var obsMaxSpeed = 5;
 var gameOver = false;
+var gameStart = false;
 var score = 0;
 var highScores = [];
 var leaderboardXPos = cvs.width/2
@@ -68,7 +69,7 @@ function moveShip(){
   }
 }
 
-// Obstacle
+// Create obstacle
 function makeObs() {
   var obs = {
     x : cvs.width + obsRadius,
@@ -110,11 +111,12 @@ function moveObs() {
   });
 }
 
-// SCORE
+
+// Score
 function drawScore(){
 	ctx.font = "16px Arial";
  	ctx.fillStyle = "white";
- 	ctx.fillText("Score: "+score, 30, 20);
+ 	ctx.fillText("Score: "+score, 50, 20);
 }
 
 function addScore() {
@@ -127,50 +129,68 @@ function addScore() {
 // leaderboard
 function checkScore(){
 		console.log('checkscore');
+// Pushes most recent score into array and sorts it
 	highScores.push(score);
 	highScores.sort(function(a, b){return b - a});
 
+// Removes the last item in the array keeping it at 5
 	if (highScores.length > 5){
 			highScores.pop()
 			console.log(highScores);
 	}
 }
 
+// Start screen
+function startGame() {
+	if(! gameStart){
+		ctx.font = "100px Arial";
+		ctx.fillStyle = "white";
+		ctx.textAlign = "center";
+		ctx.fillText("SPACE", cvs.width/2, cvs.height/2);
 
+		ctx.font = "20px Arial";
+		ctx.fillStyle = "white";
+		ctx.textAlign = "center";
+		ctx.fillText("Press Space To Play", cvs.width/2, 450);
+
+		document.addEventListener('keydown', function(event){
+			if(event.keyCode == 32){
+				gameStart = true;
+			}
+	})
+}
+}
 
 
 // End game screen
 function endGame(){
 	if(gameOver){
 
-// draw the end screen
+// Draw the end screen
 	ctx.beginPath();
 	ctx.rect(0, 0, cvs.width, cvs.height);
 	ctx.fillStyle = "Black";
 	ctx.fill();
 
-//write the words
-	ctx.font = "35px Arial";
+// Write the words
+	ctx.font = "50px Arial";
 	ctx.fillStyle = "white";
 	ctx.textAlign = "center";
-	ctx.fillText("GAMEOVER", cvs.width/2, 50);
-
-	// ctx.font = "20px Arial";
-	// ctx.fillText("Score: "+score, cvs.width/2, 300);
+	ctx.fillText("GAMEOVER", cvs.width/2, 75);
 
 	ctx.font = "20px Arial";
 	ctx.fillText("Press Space To Try Again", cvs.width/2, 450);
 
-	// draw leaderboard
-	ctx.font = "30px Arial";
+	// Draw leaderboard
+	ctx.font = "35px Arial";
 	ctx.fillStyle = "white";
 	ctx.fillText("Leaderboard", leaderboardXPos, leaderboardYPos);
 
 	for ( var i = 0; i < highScores.length; i++) {
-		ctx.font = "20px Arial";
+		ctx.font = "25px Arial";
 		ctx.fillstyle = "white";
 		ctx.fillText((i + 1) + ": " + highScores[i], leaderboardXPos - 10, leaderboardYPos + 30);
-		leaderboardYPos += 35;
+		leaderboardYPos += 50;
 	}
 leaderboardYPos = 150;
 
@@ -179,6 +199,7 @@ leaderboardYPos = 150;
 }
 
 
+// Reset game from end screen when spacebar pushed
 function gameReset() {
 	document.addEventListener('keydown', function(event){
 		if(gameOver && event.keyCode == 32){
@@ -193,14 +214,19 @@ function gameReset() {
 }
 
 
-//game loop
+// Game loop
 function loop(){
-  ctx.beginPath();
-  ctx.rect(0, 0, cvs.width, cvs.height);
-  ctx.fillStyle = "Black";
-  ctx.fill();
+  // ctx.beginPath();
+  // ctx.rect(0, 0, cvs.width, cvs.height);
+  // ctx.fillStyle = "Black";
+  // ctx.fill();
 
+	ctx.drawImage(BG_IMG, 0, 0, cvs.width, cvs.height);
 
+	startGame();
+
+if(gameStart){
+// Creates a maxium amount of obstacles
   if(createObs){
     for( var i = 0; i < totalObs; i++){
       makeObs();
@@ -217,6 +243,7 @@ function loop(){
 	addScore();
 	endGame();
 	gameReset();
+};
 
   requestAnimationFrame(loop);
 	}
