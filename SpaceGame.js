@@ -10,7 +10,7 @@ ctx.fill();
 //variables
 var upArrow = false;
 var downArrow = false;
-var obsRadius = 30;
+var obsSize = 80;
 var obstacles = [];
 var createObs = true;
 var totalObs = 8;
@@ -29,19 +29,20 @@ var leaderboardYPos = 150
 const ship = {
 	x : 100,
 	y : cvs.height/2,
+	size : 40,
 	speed : 8,
-	radius : 15,
 }
 
 // draw ball
 function drawShip(){
-  ctx.beginPath();
-
-  ctx.arc(ship.x, ship.y, ship.radius, 0, Math.PI*2);
-  ctx.fillStyle = "Green";
-  ctx.fill();
-
-  ctx.closePath();
+	ctx.drawImage(SHIP_IMG, ship.x, ship.y, ship.size, ship.size);
+  // ctx.beginPath();
+	//
+  // ctx.arc(ship.x, ship.y, ship.radius, 0, Math.PI*2);
+  // ctx.fillStyle = "Green";
+  // ctx.fill();
+	//
+  // ctx.closePath();
 }
 
 // control spaceship
@@ -62,9 +63,9 @@ document.addEventListener("keyup", function(event){
 
 // move the spaceship
 function moveShip(){
-  if(upArrow && ship.y - ship.radius > 0){
+  if(upArrow && ship.y > 0){
     ship.y -= ship.speed;
-  }else if(downArrow && ship.y + ship.radius < cvs.height){
+  }else if(downArrow && ship.y + ship.size < cvs.height){
     ship.y += ship.speed;
   }
 }
@@ -72,23 +73,28 @@ function moveShip(){
 // Create obstacle
 function makeObs() {
   var obs = {
-    x : cvs.width + obsRadius,
-    y :  Math.floor(Math.random() * ((cvs.height + obsRadius) - obsRadius)),
+    x : cvs.width,
+    y :  Math.floor(Math.random() * ((cvs.height + obsSize) - obsSize)),
+		size : obsSize,
     speed : (Math.random() * (obsMaxSpeed - obsMinSpeed) + obsMinSpeed),
-		radius : obsRadius
+
   }
     obstacles.push(obs);
 }
 
 // draw obstacles
 function drawObs(){
-  obstacles.forEach(function(obs, i) {
-    ctx.beginPath();
-    ctx.arc(obs.x, obs.y, obs.radius, 0, Math.PI*2);
-    ctx.fillStyle = "Red";
-    ctx.fill();
-    ctx.closePath();
-  });
+for (var i = 0; i < obstacles.length; i++) {
+	ctx.drawImage(OBS_IMG, obstacles[i].x, obstacles[i].y, obstacles[i].size, obstacles[i].size);
+}
+
+  // obstacles.forEach(function(obs, i) {
+  //   // ctx.beginPath();
+  //   // ctx.arc(obs.x, obs.y, obs.radius, 0, Math.PI*2);
+  //   // ctx.fillStyle = "Red";
+  //   // ctx.fill();
+  //   // ctx.closePath();
+  // });
 }
 
 // Obstacle movement
@@ -97,13 +103,13 @@ function moveObs() {
 
     obs.x -= obs.speed;
 
-    if(obs.x < 0 - obs.radius) {
-      obs.y =  Math.floor(Math.random() * ((cvs.height + obs.radius) - obs.radius));
-      obs.x = cvs.width + obs.radius;
+    if(obs.x < 0 - obs.size) {
+      obs.y =  Math.floor(Math.random() * ((cvs.height) - obs.size));
+      obs.x = cvs.width + obs.size;
       obs.speed = (Math.random() * (obsMaxSpeed - obsMinSpeed) + obsMinSpeed)
     }
 		// Collision detection
-		if(ship.x + ship.radius > obs.x - obs.radius && ship.x - ship.radius < obs.x + obs.radius && ship.y + ship.radius > obs.y - obs.radius && ship.y - ship.radius < obs.y + obs.radius){
+		if(ship.x + ship.size > obs.x && ship.x < obs.x + obs.size && ship.y + ship.size > obs.y && ship.y < obs.y + obs.size){
 			console.log('hit');
 			gameOver = true;
 			checkScore();
