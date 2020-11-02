@@ -7,17 +7,21 @@ ctx.rect(0, 0, cvs.width, cvs.height);
 ctx.fillStyle = "Black";
 ctx.fill();
 
-//variables
+// Ship variables
 var upArrow = false;
 var downArrow = false;
-var obsSize = 80;
+
+// Obstacle Variables
+var obsSize = 70;
 var obstacles = [];
 var createObs = true;
 var totalObs = 8;
 var obsMinSpeed = 3;
 var obsMaxSpeed = 5;
-var gameOver = false;
+
+// Game Variables
 var gameStart = false;
+var gameOver = false;
 var score = 0;
 var highScores = [];
 var leaderboardXPos = cvs.width/2
@@ -30,20 +34,14 @@ const ship = {
 	x : 100,
 	y : cvs.height/2,
 	size : 40,
-	speed : 8,
+	speed : 6,
 }
 
 // draw ball
 function drawShip(){
 	ctx.drawImage(SHIP_IMG, ship.x, ship.y, ship.size, ship.size);
-  // ctx.beginPath();
-	//
-  // ctx.arc(ship.x, ship.y, ship.radius, 0, Math.PI*2);
-  // ctx.fillStyle = "Green";
-  // ctx.fill();
-	//
-  // ctx.closePath();
 }
+// End of fucntion
 
 // control spaceship
 document.addEventListener("keydown", function(event){
@@ -60,6 +58,7 @@ document.addEventListener("keyup", function(event){
 		downArrow = false;
 	}
 });
+// End of function
 
 // move the spaceship
 function moveShip(){
@@ -69,6 +68,7 @@ function moveShip(){
     ship.y += ship.speed;
   }
 }
+// End of function
 
 // Create obstacle
 function makeObs() {
@@ -81,21 +81,15 @@ function makeObs() {
   }
     obstacles.push(obs);
 }
+// End of function
 
 // draw obstacles
 function drawObs(){
 for (var i = 0; i < obstacles.length; i++) {
 	ctx.drawImage(OBS_IMG, obstacles[i].x, obstacles[i].y, obstacles[i].size, obstacles[i].size);
+	}
 }
-
-  // obstacles.forEach(function(obs, i) {
-  //   // ctx.beginPath();
-  //   // ctx.arc(obs.x, obs.y, obs.radius, 0, Math.PI*2);
-  //   // ctx.fillStyle = "Red";
-  //   // ctx.fill();
-  //   // ctx.closePath();
-  // });
-}
+// End of function
 
 // Obstacle movement
 function moveObs() {
@@ -116,6 +110,7 @@ function moveObs() {
 		}
   });
 }
+// End of function
 
 
 // Score
@@ -130,14 +125,20 @@ function addScore() {
 		score = score + 1;
 	}
 }
+// End of function
 
 
 // leaderboard
 function checkScore(){
 		console.log('checkscore');
+		var userScore = {
+				user : prompt('What is your Name?'),
+				score : score,
+		}
+
 // Pushes most recent score into array and sorts it
-	highScores.push(score);
-	highScores.sort(function(a, b){return b - a});
+	highScores.push(userScore);
+	highScores.sort((a, b) => parseFloat(b.score) - parseFloat(a.score));
 
 // Removes the last item in the array keeping it at 5
 	if (highScores.length > 5){
@@ -145,6 +146,7 @@ function checkScore(){
 			console.log(highScores);
 	}
 }
+// End of function
 
 // Start screen
 function startGame() {
@@ -163,9 +165,10 @@ function startGame() {
 			if(event.keyCode == 32){
 				gameStart = true;
 			}
-	})
+		})
+	}
 }
-}
+// End of function
 
 
 // End game screen
@@ -190,12 +193,12 @@ function endGame(){
 	// Draw leaderboard
 	ctx.font = "35px Arial";
 	ctx.fillStyle = "white";
-	ctx.fillText("Leaderboard", leaderboardXPos, leaderboardYPos);
+	ctx.fillText("HIGHSCORES", leaderboardXPos, leaderboardYPos);
 
 	for ( var i = 0; i < highScores.length; i++) {
 		ctx.font = "25px Arial";
 		ctx.fillstyle = "white";
-		ctx.fillText((i + 1) + ": " + highScores[i], leaderboardXPos - 10, leaderboardYPos + 30);
+		ctx.fillText((i + 1) + ": " + highScores[i].user + " " + highScores[i].score, leaderboardXPos - 10, leaderboardYPos + 30);
 		leaderboardYPos += 50;
 	}
 leaderboardYPos = 150;
@@ -203,6 +206,7 @@ leaderboardYPos = 150;
 	obstacles.splice(0,obstacles.length)
  }
 }
+// End of function
 
 
 // Reset game from end screen when spacebar pushed
@@ -218,15 +222,11 @@ function gameReset() {
 		}
 	})
 }
+// End of function
 
 
 // Game loop
 function loop(){
-  // ctx.beginPath();
-  // ctx.rect(0, 0, cvs.width, cvs.height);
-  // ctx.fillStyle = "Black";
-  // ctx.fill();
-
 	ctx.drawImage(BG_IMG, 0, 0, cvs.width, cvs.height);
 
 	startGame();
@@ -250,7 +250,7 @@ if(gameStart){
 	endGame();
 	gameReset();
 };
-
   requestAnimationFrame(loop);
 	}
+	// End of function
   loop();
